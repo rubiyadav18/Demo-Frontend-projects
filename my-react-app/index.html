@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Store — Products & Customers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <nav class="nav">
+          <a href="#" class="logo nav-link nav-active" data-view="products">Store</a>
+          <div class="nav-links">
+            <a href="#" class="nav-link" data-view="products">Products</a>
+            <a href="#" class="nav-link" data-view="customers">Customers</a>
+          </div>
+        </nav>
+        <div class="hero">
+          <h1 class="hero-title">Products & Customers</h1>
+          <p class="hero-subtitle">Browse our catalog and meet our community</p>
+        </div>
+      </header>
+
+      <main>
+        <section id="products" class="section products-section view-active">
+          <div class="section-header">
+            <h2 class="section-title">Products</h2>
+            <button type="button" class="btn btn-primary" id="open-create-product">Create Product</button>
+          </div>
+          <div id="products-grid" class="products-grid"></div>
+        </section>
+
+        <section id="customers" class="section customers-section view-hidden">
+          <h2 class="section-title">Customers</h2>
+          <div id="customers-grid" class="customers-grid"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Ready to deploy — Built with Vite</p>
+      </footer>
+
+      <!-- Create Product Modal -->
+      <div id="create-product-modal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-box">
+          <div class="modal-header">
+            <h3 class="modal-title">Create Product</h3>
+            <button type="button" class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+          </div>
+          <form id="create-product-form" class="create-product-form">
+            <div class="field">
+              <label class="form-label" for="product-name">Name</label>
+              <input type="text" id="product-name" name="name" class="form-input" required placeholder="e.g. Smartphone" />
+            </div>
+
+            <div class="field">
+              <label class="form-label" for="product-price">Price</label>
+              <input type="number" id="product-price" name="price" class="form-input" step="0.01" min="0" required placeholder="699.99" />
+            </div>
+
+            <div class="field field-span-2">
+              <label class="form-label" for="product-description">Description</label>
+              <textarea id="product-description" name="description" class="form-input form-textarea" rows="4" placeholder="e.g. Latest smartphone"></textarea>
+            </div>
+
+            <div class="field">
+              <label class="form-label" for="product-category">Category</label>
+              <input type="text" id="product-category" name="category" class="form-input" required placeholder="e.g. Electronics" list="category-list" />
+            </div>
+            <datalist id="category-list">
+              <option value="Electronics">
+              <option value="Accessories">
+              <option value="Audio">
+              <option value="Bags">
+              <option value="Tech">
+              <option value="Home">
+            </datalist>
+
+            <div id="form-message" class="form-message" role="alert" hidden></div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-ghost" id="form-cancel">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="form-submit">Create Product</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
