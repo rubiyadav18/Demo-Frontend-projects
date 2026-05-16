@@ -1,10 +1,6 @@
 import './style.css'
 
-// Dev: always use relative /api (Vite proxy → http://localhost:3000) to avoid CORS.
-// Prod: set VITE_API_BASE to your deployed backend URL (e.g. https://api.example.com)
-// const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE || '')
-
-const API_BASE = 'http://localhost:3000'
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
 // Static image URLs by category (no upload to backend – display only)
 const STATIC_IMAGES = {
   Electronics: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
@@ -107,11 +103,53 @@ function showMessage(text, isError = false) {
   formMessage.hidden = !text
 }
 
+let previewObjectUrl = null
+
+function revokeProductImagePreview() {
+  if (previewObjectUrl) {
+    URL.revokeObjectURL(previewObjectUrl)
+    previewObjectUrl = null
+  }
+  const wrap = document.getElementById('product-image-preview-wrap')
+  const img = document.getElementById('product-image-preview')
+  const nameEl = document.getElementById('product-image-filename')
+  if (img) img.src = ''
+  if (wrap) wrap.hidden = true
+  if (nameEl) nameEl.textContent = ''
+}
+
+async function uploadProductImage(file) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const res = await fetch(`${API_BASE}/api/upload`, {
+    method: 'POST',
+    body: formData,
+  })
+  const rawText = await res.text()
+  let json = null
+  try {
+    json = rawText ? JSON.parse(rawText) : null
+  } catch {
+    json = null
+  }
+  if (!res.ok) {
+    const msg =
+      (json && json.message) ||
+      (rawText ? `Upload failed (${res.status}): ${rawText.slice(0, 160)}` : `Upload failed (${res.status})`)
+    throw new Error(msg)
+  }
+  if (!json || !json.success || !json.data || !json.data.url) {
+    throw new Error((json && json.message) || 'Unexpected response from upload')
+  }
+  return json.data
+}
+
 function openModal() {
   if (modal) {
     modal.classList.add('modal-open')
     modal.setAttribute('aria-hidden', 'false')
     showMessage('')
+    revokeProductImagePreview()
     form?.reset()
     setTimeout(() => document.getElementById('product-name')?.focus(), 0)
   }
@@ -122,13 +160,39 @@ function closeModal() {
     modal.classList.remove('modal-open')
     modal.setAttribute('aria-hidden', 'true')
     showMessage('')
+    revokeProductImagePreview()
   }
 }
 
+function openCreateProductModal() {
+  showView('products')
+  openModal()
+}
+
 document.getElementById('open-create-product')?.addEventListener('click', openModal)
+document.getElementById('nav-open-create-product')?.addEventListener('click', openCreateProductModal)
 document.getElementById('modal-close')?.addEventListener('click', closeModal)
 document.getElementById('modal-backdrop')?.addEventListener('click', closeModal)
 document.getElementById('form-cancel')?.addEventListener('click', closeModal)
+
+document.getElementById('product-image')?.addEventListener('change', (e) => {
+  revokeProductImagePreview()
+  const file = e.target.files?.[0]
+  const preview = document.getElementById('product-image-preview')
+  const wrap = document.getElementById('product-image-preview-wrap')
+  const nameEl = document.getElementById('product-image-filename')
+  if (!preview || !wrap) return
+  if (!file || !file.type.startsWith('image/')) {
+    wrap.hidden = true
+    if (nameEl) nameEl.textContent = ''
+    return
+  }
+  if (nameEl) nameEl.textContent = file.name
+  previewObjectUrl = URL.createObjectURL(file)
+  preview.src = previewObjectUrl
+  preview.alt = file.name || 'Selected image preview'
+  wrap.hidden = false
+})
 
 form?.addEventListener('submit', async (e) => {
   e.preventDefault()
@@ -138,6 +202,7 @@ form?.addEventListener('submit', async (e) => {
   const price = parseFloat(document.getElementById('product-price').value)
   const description = document.getElementById('product-description').value.trim()
   const category = document.getElementById('product-category').value.trim()
+  const imageFile = document.getElementById('product-image')?.files?.[0]
 
   const payload = { name, price, description, category }
   const submitBtn = document.getElementById('form-submit')
@@ -147,6 +212,19 @@ form?.addEventListener('submit', async (e) => {
   }
 
   try {
+    let uploadedImageUrl = null
+    if (imageFile) {
+      if (submitBtn) submitBtn.textContent = 'Uploading…'
+      try {
+        const uploadData = await uploadProductImage(imageFile)
+        uploadedImageUrl = uploadData.url
+      } catch (uploadErr) {
+        showMessage(uploadErr instanceof Error ? uploadErr.message : 'Upload failed', true)
+        return
+      }
+      if (submitBtn) submitBtn.textContent = 'Creating…'
+    }
+
     const res = await fetch(`${API_BASE}/api/products`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -172,7 +250,7 @@ form?.addEventListener('submit', async (e) => {
       const created = json.data
       apiProducts.push({
         ...created,
-        image: getStaticImageForCategory(created.category),
+        image: uploadedImageUrl || getStaticImageForCategory(created.category),
       })
       renderProducts()
       closeModal()
@@ -181,7 +259,7 @@ form?.addEventListener('submit', async (e) => {
     }
   } catch (err) {
     showMessage(
-      `Network error. Restart frontend and ensure backend is running at http://127.0.0.1:3000`,
+      `Network error. Ensure backend is running and VITE_API_URL is correct (current: ${API_BASE || '(empty)'})`,
       true
     )
   } finally {

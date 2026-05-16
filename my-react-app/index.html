@@ -17,6 +17,7 @@
           <div class="nav-links">
             <a href="#" class="nav-link" data-view="products">Products</a>
             <a href="#" class="nav-link" data-view="customers">Customers</a>
+            <button type="button" class="btn btn-primary btn-nav-create" id="nav-open-create-product">Create Product</button>
           </div>
         </nav>
         <div class="hero">
@@ -80,6 +81,18 @@
               <option value="Tech">
               <option value="Home">
             </datalist>
+
+            <div class="field field-span-2 product-image-field">
+              <span class="form-label" id="product-image-label">Product image (optional)</span>
+              <div class="file-upload-row">
+                <label for="product-image" class="btn btn-primary file-upload-trigger">Choose image</label>
+                <span id="product-image-filename" class="file-upload-filename" aria-live="polite"></span>
+              </div>
+              <input type="file" id="product-image" name="image" class="product-image-input" accept="image/*" aria-labelledby="product-image-label" />
+              <div id="product-image-preview-wrap" class="product-image-preview-wrap" hidden>
+                <img id="product-image-preview" class="product-image-preview" alt="" />
+              </div>
+            </div>
 
             <div id="form-message" class="form-message" role="alert" hidden></div>
             <div class="form-actions">
