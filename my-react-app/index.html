@@ -4,100 +4,236 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Store — Products & Customers</title>
+    <title>JD Store — Shop Online</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div id="app">
-      <header class="header">
-        <nav class="nav">
-          <a href="#" class="logo nav-link nav-active" data-view="products">Store</a>
-          <div class="nav-links">
-            <a href="#" class="nav-link" data-view="products">Products</a>
-            <a href="#" class="nav-link" data-view="customers">Customers</a>
-            <button type="button" class="btn btn-primary btn-nav-create" id="nav-open-create-product">Create Product</button>
-          </div>
+    <div id="auth-app" class="auth-app">
+      <section id="auth-login" class="auth-page auth-page-login">
+        <nav class="auth-nav">
+          <!-- <a href="#" class="auth-nav-logo"><span class="auth-nav-logo-dot"></span> StorePlus</a> -->
+          <a href="#" class="auth-nav-logo"><span class="auth-nav-logo-dot"></span> JD Store</a>
+          <a href="#" class="auth-nav-btn" id="auth-nav-signup">SIGN UP</a>
         </nav>
-        <div class="hero">
-          <h1 class="hero-title">Products & Customers</h1>
-          <p class="hero-subtitle">Browse our catalog and meet our community</p>
+        <div class="auth-card-login">
+          <div class="auth-panel-visual">
+            <h1>Welcome Back</h1>
+            <p>Please log in using your personal information to stay connected with us.</p>
+          </div>
+          <div class="auth-panel-form">
+            <h2 class="auth-form-title">LOGIN</h2>
+            <div id="login-message" class="auth-message auth-message-error" role="alert" hidden></div>
+            <form id="login-form" novalidate>
+              <div class="auth-field">
+                <input type="email" id="login-email" class="auth-input" placeholder="Email" required autocomplete="email" />
+              </div>
+              <div class="auth-field auth-input-wrap">
+                <input type="password" id="login-password" class="auth-input" placeholder="Password" required autocomplete="current-password" />
+                <button type="button" class="auth-toggle-pw" id="login-toggle-pw" aria-label="Show password">👁</button>
+              </div>
+              <a href="#" class="auth-forgot">Forgot password?</a>
+              <button type="submit" class="auth-btn-primary">Log In</button>
+              <p class="auth-switch">Don't have an account? <a href="#" id="go-to-signup">Sign up</a></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="auth-signup" class="auth-page auth-page-signup view-hidden">
+        <a href="#" class="auth-link-back" id="go-to-login">← Back to login</a>
+        <div class="auth-card-signup">
+          <div class="auth-signup-form-panel">
+            <h2 class="auth-signup-title">Sign Up</h2>
+            <div id="signup-message" class="auth-message auth-message-error" role="alert" hidden></div>
+            <form id="signup-form" novalidate>
+              <div class="auth-field-line">
+                <label for="signup-name">User name</label>
+                <input type="text" id="signup-name" class="auth-input-line" placeholder="Your name" required autocomplete="name" />
+                <span class="auth-field-icon" aria-hidden="true">👤</span>
+              </div>
+              <div class="auth-field-line">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" class="auth-input-line" placeholder="you@example.com" required autocomplete="email" />
+                <span class="auth-field-icon" aria-hidden="true">✉</span>
+              </div>
+              <div class="auth-field-line auth-input-wrap">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" class="auth-input-line" placeholder="••••••••" required autocomplete="new-password" />
+                <button type="button" class="auth-toggle-pw" id="signup-toggle-pw" aria-label="Show password">👁</button>
+              </div>
+              <button type="submit" class="auth-btn-signup">Sign Up</button>
+              <p class="auth-switch">Already have an account? <a href="#" id="go-to-login-footer">Log in</a></p>
+            </form>
+          </div>
+          <div class="auth-signup-art-panel" aria-hidden="true">
+            <div class="auth-plant">
+              <div class="auth-plant-leaf auth-plant-leaf-1"></div>
+              <div class="auth-plant-leaf auth-plant-leaf-2"></div>
+              <div class="auth-plant-leaf auth-plant-leaf-3"></div>
+              <div class="auth-plant-pot"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="store-app" class="view-hidden">
+      <header class="top-header">
+        <div class="top-header-inner">
+          <a href="#" class="logo nav-link nav-active" data-view="products">
+            <!-- Store<span class="logo-plus">Plus</span> -->
+            JD<span class="logo-accent">Store</span>
+          </a>
+
+          <form class="search-form" id="search-form" role="search">
+            <input
+              type="search"
+              id="product-search"
+              class="search-input"
+              placeholder="Search for products, brands and more"
+              autocomplete="off"
+            />
+            <button type="submit" class="search-btn" aria-label="Search">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21 21l-4.35-4.35M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </form>
+
+          <nav class="top-nav">
+            <a href="#" class="top-nav-link nav-link nav-active" data-view="products">Home</a>
+            <a href="#" class="top-nav-link nav-link" data-view="customers">Customers</a>
+            <button type="button" class="btn-sell" id="open-create-product" title="Add a new product to your store">+ Add Product</button>
+            <div class="user-menu">
+              <span id="user-greeting" class="user-greeting" hidden></span>
+              <button type="button" class="btn-logout" id="btn-logout">Logout</button>
+            </div>
+          </nav>
         </div>
       </header>
 
-      <main>
-        <section id="products" class="section products-section view-active">
-          <div class="section-header">
-            <h2 class="section-title">Products</h2>
-            <button type="button" class="btn btn-primary" id="open-create-product">Create Product</button>
+      <div class="category-bar home-only" id="category-bar">
+        <div class="category-bar-inner" id="category-strip"></div>
+      </div>
+
+      <main class="page-main">
+        <section id="products" class="view-active">
+          <div class="promo-row home-only">
+            <article class="promo-card promo-card-1">
+              <p class="promo-tag">Big Billion Days</p>
+              <h3 class="promo-title">Electronics &amp; Gadgets</h3>
+              <p class="promo-off">From 40% off</p>
+            </article>
+            <article class="promo-card promo-card-2">
+              <p class="promo-tag">Top Deals</p>
+              <h3 class="promo-title">Fashion &amp; Accessories</h3>
+              <p class="promo-off">Min. 50% off</p>
+            </article>
+            <article class="promo-card promo-card-3">
+              <p class="promo-tag">New Arrivals</p>
+              <h3 class="promo-title">Audio &amp; Home</h3>
+              <p class="promo-off">Starting ₹499</p>
+            </article>
           </div>
-          <div id="products-grid" class="products-grid"></div>
+
+          <div class="deals-section">
+            <div class="deals-header">
+              <h2 class="deals-title">Deals of the Day</h2>
+              <span class="deals-meta" id="products-subtitle">Loading…</span>
+            </div>
+            <div id="products-grid" class="products-grid"></div>
+          </div>
         </section>
 
-        <section id="customers" class="section customers-section view-hidden">
-          <h2 class="section-title">Customers</h2>
+        <section id="customers" class="customers-page view-hidden">
+          <h2 class="page-heading">Our Customers</h2>
+          <p class="page-lead">Meet shoppers from our community</p>
           <div id="customers-grid" class="customers-grid"></div>
         </section>
       </main>
 
       <footer class="footer">
-        <p>Ready to deploy — Built with Vite</p>
+        <p>© JD Store — Built with Vite</p>
       </footer>
 
-      <!-- Create Product Modal -->
-      <div id="create-product-modal" class="modal" aria-hidden="true">
-        <div class="modal-backdrop" id="modal-backdrop"></div>
-        <div class="modal-box">
+      <!-- Product detail -->
+      <div id="product-detail-modal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" id="product-detail-backdrop"></div>
+        <div class="modal-box modal-box-wide">
           <div class="modal-header">
-            <h3 class="modal-title">Create Product</h3>
+            <h3 class="modal-title">Product details</h3>
+            <button type="button" class="modal-close" id="product-detail-close" aria-label="Close">&times;</button>
+          </div>
+          <div id="product-detail-body" class="product-detail-body">
+            <p class="products-empty">Loading…</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Product -->
+      <div id="create-product-modal" class="modal modal-create" aria-hidden="true">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-box modal-box-form">
+          <div class="modal-header modal-header-brand">
+            <div>
+              <h3 class="modal-title">Add new product</h3>
+              <p class="modal-subtitle">List an item on your store in a few steps</p>
+            </div>
             <button type="button" class="modal-close" id="modal-close" aria-label="Close">&times;</button>
           </div>
           <form id="create-product-form" class="create-product-form">
-            <div class="field">
-              <label class="form-label" for="product-name">Name</label>
-              <input type="text" id="product-name" name="name" class="form-input" required placeholder="e.g. Smartphone" />
-            </div>
-
-            <div class="field">
-              <label class="form-label" for="product-price">Price</label>
-              <input type="number" id="product-price" name="price" class="form-input" step="0.01" min="0" required placeholder="699.99" />
-            </div>
-
-            <div class="field field-span-2">
-              <label class="form-label" for="product-description">Description</label>
-              <textarea id="product-description" name="description" class="form-input form-textarea" rows="4" placeholder="e.g. Latest smartphone"></textarea>
-            </div>
-
-            <div class="field">
-              <label class="form-label" for="product-category">Category</label>
-              <input type="text" id="product-category" name="category" class="form-input" required placeholder="e.g. Electronics" list="category-list" />
-            </div>
-            <datalist id="category-list">
-              <option value="Electronics">
-              <option value="Accessories">
-              <option value="Audio">
-              <option value="Bags">
-              <option value="Tech">
-              <option value="Home">
-            </datalist>
-
-            <div class="field field-span-2 product-image-field">
-              <span class="form-label" id="product-image-label">Product image (optional)</span>
-              <div class="file-upload-row">
-                <label for="product-image" class="btn btn-primary file-upload-trigger">Choose image</label>
-                <span id="product-image-filename" class="file-upload-filename" aria-live="polite"></span>
+            <ol class="form-steps" aria-label="Steps">
+              <li class="form-step active">Details</li>
+              <li class="form-step">Image</li>
+              <li class="form-step">Publish</li>
+            </ol>
+            <div class="form-body">
+              <div class="form-row">
+                <div class="field">
+                  <label class="form-label" for="product-name">Product name</label>
+                  <input type="text" id="product-name" name="name" class="form-input" required placeholder="e.g. iPhone 15" />
+                </div>
+                <div class="field">
+                  <label class="form-label" for="product-price">Price ($)</label>
+                  <input type="number" id="product-price" name="price" class="form-input" step="0.01" min="0" required placeholder="999.00" />
+                </div>
               </div>
-              <input type="file" id="product-image" name="image" class="product-image-input" accept="image/*" aria-labelledby="product-image-label" />
-              <div id="product-image-preview-wrap" class="product-image-preview-wrap" hidden>
-                <img id="product-image-preview" class="product-image-preview" alt="" />
+              <div class="field">
+                <label class="form-label" for="product-category">Category</label>
+                <input type="text" id="product-category" name="category" class="form-input" required placeholder="Electronics, Audio, Accessories…" list="category-list" />
               </div>
+              <datalist id="category-list">
+                <option value="Electronics">
+                <option value="Accessories">
+                <option value="Audio">
+                <option value="Bags">
+                <option value="Tech">
+                <option value="Home">
+              </datalist>
+              <div class="field">
+                <label class="form-label" for="product-description">Description</label>
+                <textarea id="product-description" name="description" class="form-input form-textarea" rows="3" placeholder="Short description for buyers"></textarea>
+              </div>
+              <div class="field product-image-field">
+                <span class="form-label" id="product-image-label">Product photo</span>
+                <label for="product-image" class="upload-zone" id="upload-zone">
+                  <span class="upload-zone-icon" aria-hidden="true">📷</span>
+                  <span class="upload-zone-title">Click to upload image</span>
+                  <span class="upload-zone-hint">JPG, PNG — recommended under 5MB</span>
+                  <span id="product-image-filename" class="file-upload-filename" aria-live="polite"></span>
+                </label>
+                <input type="file" id="product-image" name="image" class="product-image-input" accept="image/*" required aria-labelledby="product-image-label" />
+                <div id="product-image-preview-wrap" class="product-image-preview-wrap" hidden>
+                  <img id="product-image-preview" class="product-image-preview" alt="Preview" />
+                </div>
+              </div>
+              <div id="form-message" class="form-message" role="alert" hidden></div>
             </div>
-
-            <div id="form-message" class="form-message" role="alert" hidden></div>
-            <div class="form-actions">
+            <div class="form-footer">
               <button type="button" class="btn btn-ghost" id="form-cancel">Cancel</button>
-              <button type="submit" class="btn btn-primary" id="form-submit">Create Product</button>
+              <button type="submit" class="btn btn-primary btn-submit" id="form-submit">Add Product</button>
             </div>
           </form>
         </div>
